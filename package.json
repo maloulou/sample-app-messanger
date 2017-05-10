@@ -1,0 +1,21 @@
+{
+  "name": "messanger-platform-sample",
+  "version": "1.0.0",
+  "description": "Sample app for messanger platform bot",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js",
+  },
+  "repository": {
+    "type": "git",
+    "url": "messanger-platform-sample"
+  },
+  "author": "Mahdi Aloulou",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.17.1",
+    "express": "^4.15.2",
+    "request": "^2.81.0"
+  }
+}
