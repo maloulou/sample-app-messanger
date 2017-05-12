@@ -21,30 +21,8 @@ app.get('/webhook', function (req, res) {
     }
 });
 
-// generic function to get user data
-function getUser(userId) {
-    request({
-        url: 'https://graph.facebook.com/v2.6/' + userId,
-        method: 'GET',
-        qs: {access_token: process.env.PAGE_ACCESS_TOKEN},
-        json: {
-            fields: 'first_name,last_name,profile_pic,locale,timezone,gender'
-        }
-    }, function(error, response, body) {
-        if (error) {
-            console.log('Error sending message: ', error);
-            return false;
-        } else if (response.body.error) {
-            console.log('Error: ', response.body.error);
-            return false;
-        } else {
-            return response.body;
-        }
-    });
-}
-
 // generic function sending messages
-function sendMessage(recipientId, message) {  
+function sendMessage(recipient, message) {  
     request({
         url: 'https://graph.facebook.com/v2.6/me/messages',
         qs: {access_token: process.env.PAGE_ACCESS_TOKEN},
@@ -68,8 +46,27 @@ app.post('/webhook', function (req, res) {
     for (i = 0; i < events.length; i++) {
         var event = events[i];
         if (event.message && event.message.text) {
-            console.log(getUser(event.sender.id));
-            sendMessage(event.sender.id, {text: "Echo: " + event.message.text});
+            request({
+                url: 'https://graph.facebook.com/v2.6/' + event.sender.id,
+                method: 'GET',
+                qs: {access_token: process.env.PAGE_ACCESS_TOKEN},
+                json: {
+                    fields: 'first_name,last_name,profile_pic,locale,timezone,gender'
+                }
+            }, function(error, response, body) {
+                if (error) {
+                    console.log('Error sending message: ', error);
+                    return false;
+                } else if (response.body.error) {
+                    console.log('Error: ', response.body.error);
+                    return false;
+                } else {
+                    // Message: event.message.text
+                    sendMessage(event.sender.id, {
+                        text: `Hello `+ (response.body.gender == "male" ? "Mr. " : "Mm.") +`${response.body.first_name} ${response.body.last_name}, Your message was "${event.message.text}"`
+                    });
+                }
+            });
         }
     }
     res.sendStatus(200);
