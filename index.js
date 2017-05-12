@@ -43,10 +43,10 @@ function sendMessage(recipientId, message) {
 // handler receiving messages
 app.post('/webhook', function (req, res) {  
     var events = req.body.entry[0].messaging;
+    console.log(req.body)
     for (i = 0; i < events.length; i++) {
         var event = events[i];
         if (event.message && event.message.text) {
-            console.log(event);
             sendMessage(event.sender.id, {text: "Echo: " + event.message.text});
         }
     }
