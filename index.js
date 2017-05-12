@@ -61,9 +61,8 @@ app.post('/webhook', function (req, res) {
                     console.log('Error: ', response.body.error);
                     return false;
                 } else {
-                    // Message: event.message.text
+                    // Send Profile Image
                     sendMessage(event.sender.id, {
-                        text: `Hello `+ (response.body.gender == "male" ? "Mr. " : "Mm.") +`${response.body.first_name} ${response.body.last_name}, Your message was "${event.message.text}"`,
                         attachment: {
                             type: "image",
                             payload: {
@@ -71,6 +70,10 @@ app.post('/webhook', function (req, res) {
                                 is_reusable: false
                             }
                         }
+                    });
+                    // Send Text Message
+                    sendMessage(event.sender.id, {
+                        text: `Hello `+ (response.body.gender == "male" ? "Mr. " : "Mm.") +`${response.body.first_name} ${response.body.last_name}, Your message was "${event.message.text}"`
                     });
                 }
             });
