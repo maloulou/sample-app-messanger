@@ -33,10 +33,12 @@ function getUser(userId) {
     }, function(error, response, body) {
         if (error) {
             console.log('Error sending message: ', error);
+            return false;
         } else if (response.body.error) {
             console.log('Error: ', response.body.error);
+            return false;
         } else {
-            console.log(response.body);
+            return response.body;
         }
     });
 }
@@ -66,7 +68,7 @@ app.post('/webhook', function (req, res) {
     for (i = 0; i < events.length; i++) {
         var event = events[i];
         if (event.message && event.message.text) {
-            getUser(event.sender.id);
+            console.log(getUser(event.sender.id));
             sendMessage(event.sender.id, {text: "Echo: " + event.message.text});
         }
     }
