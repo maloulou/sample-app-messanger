@@ -63,7 +63,14 @@ app.post('/webhook', function (req, res) {
                 } else {
                     // Message: event.message.text
                     sendMessage(event.sender.id, {
-                        text: `Hello `+ (response.body.gender == "male" ? "Mr. " : "Mm.") +`${response.body.first_name} ${response.body.last_name}, Your message was "${event.message.text}"`
+                        text: `Hello `+ (response.body.gender == "male" ? "Mr. " : "Mm.") +`${response.body.first_name} ${response.body.last_name}, Your message was "${event.message.text}"`,
+                        attachment: {
+                            type: "image",
+                            payload: {
+                                url: response.body.profile_pic,
+                                is_reusable: false
+                            }
+                        }
                     });
                 }
             });
