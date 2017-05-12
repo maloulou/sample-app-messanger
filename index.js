@@ -22,7 +22,7 @@ app.get('/webhook', function (req, res) {
 });
 
 // generic function sending messages
-function sendMessage(recipient, message) {  
+function sendMessage(recipientId, message) {  
     request({
         url: 'https://graph.facebook.com/v2.6/me/messages',
         qs: {access_token: process.env.PAGE_ACCESS_TOKEN},
