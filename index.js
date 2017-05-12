@@ -21,6 +21,26 @@ app.get('/webhook', function (req, res) {
     }
 });
 
+// generic function to get user data
+function getUser(userId) {
+    request({
+        url: 'https://graph.facebook.com/v2.6/' + userId,
+        method: 'GET',
+        qs: {access_token: process.env.PAGE_ACCESS_TOKEN},
+        json: {
+            fields: 'first_name,last_name,profile_pic,locale,timezone,gender'
+        }
+    }, function(error, response, body) {
+        if (error) {
+            console.log('Error sending message: ', error);
+        } else if (response.body.error) {
+            console.log('Error: ', response.body.error);
+        } else {
+            console.log(response.body);
+        }
+    });
+}
+
 // generic function sending messages
 function sendMessage(recipientId, message) {  
     request({
@@ -43,10 +63,10 @@ function sendMessage(recipientId, message) {
 // handler receiving messages
 app.post('/webhook', function (req, res) {  
     var events = req.body.entry[0].messaging;
-    console.log(req.body)
     for (i = 0; i < events.length; i++) {
         var event = events[i];
         if (event.message && event.message.text) {
+            getUser(event.sender.id);
             sendMessage(event.sender.id, {text: "Echo: " + event.message.text});
         }
     }
